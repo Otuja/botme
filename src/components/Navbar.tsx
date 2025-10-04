@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { CiMenuFries } from "react-icons/ci";
-import { PiSidebarSimpleThin } from "react-icons/pi";
 import { RiChatNewLine, RiDeleteBin4Line } from "react-icons/ri";
 import Link from "next/link";
 import clsx from "clsx";
