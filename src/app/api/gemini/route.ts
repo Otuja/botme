@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
-    // join history into a prompt
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const prompt = messages
       .map((m: any) => `${m.sender}: ${m.text}`)
       .join("\n");
