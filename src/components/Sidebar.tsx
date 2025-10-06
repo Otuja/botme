@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { PiSidebarSimpleThin } from "react-icons/pi";
@@ -11,32 +11,42 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true);
   const [chats, setChats] = useState<{ id: number; title: string }[]>([]);
   const router = useRouter();
+  const hasLoaded = useRef(false);
 
-  // Load chats from localStorage
+  // ✅ Load chats from localStorage only once
   useEffect(() => {
     const saved = localStorage.getItem("chats");
     if (saved) {
-      setChats(JSON.parse(saved));
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setChats(parsed);
+        }
+      } catch {
+        console.warn("Failed to parse chats");
+      }
     }
+    hasLoaded.current = true; // mark that data is loaded
   }, []);
 
-  // Save chats whenever they change
+  // ✅ Save chats only after initial load
   useEffect(() => {
-    localStorage.setItem("chats", JSON.stringify(chats));
+    if (hasLoaded.current) {
+      localStorage.setItem("chats", JSON.stringify(chats));
+    }
   }, [chats]);
 
-  // Create new chat and redirect
+  // ✅ Create new chat and redirect
   const createNewChat = () => {
     const newId = Date.now();
     const newChat = { id: newId, title: `New Chat ${chats.length + 1}` };
     const updated = [...chats, newChat];
     setChats(updated);
     localStorage.setItem("chats", JSON.stringify(updated));
-
     router.push(`/chat/${newId}`);
   };
 
-  // Clear all chats and messages
+  // ✅ Clear all chats and messages
   const clearChats = () => {
     localStorage.removeItem("chats");
     Object.keys(localStorage).forEach((key) => {
@@ -51,34 +61,35 @@ export default function Sidebar() {
   return (
     <div
       className={clsx(
-        "hidden md:flex flex-col bg-[#171717] text-white border-r border-[#404040] min-h-screen transition-all duration-300",
+        "hidden md:flex flex-col bg-[#171717] text-white border-r border-[#404040] h-full transition-all duration-300",
         isOpen ? "w-64" : "w-16"
       )}
     >
-      {/* Fixed Header */}
-      <div className="sticky top-0 z-10 bg-[#171717] border-b border-[#404040] flex items-center justify-between p-3">
-        {isOpen && <h1 className="text-lg font-bold">Bot Me</h1>}
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-lg hover:bg-[#404040] transition"
-        >
-          {isOpen ? (
-            <X size={20} className="text-[#a3a3a3]" />
-          ) : (
-            <PiSidebarSimpleThin size={20} className="text-[#a3a3a3]" />
-          )}
-        </button>
-      </div>
+      {/* Header */}
+      <div className="sticky top-0 z-10">
+        <div className="bg-[#171717] border-b border-[#404040] flex items-center justify-between p-3">
+          {isOpen && <h1 className="text-lg font-bold">Bot Me</h1>}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="p-2 rounded-lg hover:bg-[#404040] transition"
+          >
+            {isOpen ? (
+              <X size={20} className="text-[#a3a3a3]" />
+            ) : (
+              <PiSidebarSimpleThin size={20} className="text-[#a3a3a3]" />
+            )}
+          </button>
+        </div>
 
-      {/* Fixed New Chat Button */}
-      <div className="sticky top-[49px] z-10 bg-[#171717] border-b border-[#404040] p-3">
-        <button
-          onClick={createNewChat}
-          className="w-full flex items-center gap-2 hover:bg-[#404040] px-3 py-2 rounded-lg text-sm transition"
-        >
-          <RiChatNewLine size={18} className="text-[#a3a3a3]" />
-          {isOpen && <span>New Chat</span>}
-        </button>
+        <div className="bg-[#171717] border-b border-[#404040] p-3">
+          <button
+            onClick={createNewChat}
+            className="w-full flex items-center gap-2 hover:bg-[#404040] px-3 py-2 rounded-lg text-sm transition"
+          >
+            <RiChatNewLine size={18} className="text-[#a3a3a3]" />
+            {isOpen && <span>New Chat</span>}
+          </button>
+        </div>
       </div>
 
       {/* Scrollable Chat List */}
@@ -94,7 +105,7 @@ export default function Sidebar() {
         ))}
       </div>
 
-      {/* Fixed Footer */}
+      {/* Footer */}
       <div className="sticky bottom-0 bg-[#171717] border-t border-[#404040] p-3">
         <button
           onClick={clearChats}

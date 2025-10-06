@@ -138,29 +138,31 @@ export default function ChatBody({ chatId }: { chatId: string }) {
         <div ref={bottomRef} />
       </div>
 
-      {/* Input */}
-      <div className="px-6 py-4 bg-[#262626]">
-        <div className="max-w-3xl mx-auto flex items-center bg-[#171717] border border-[#404040] rounded-full px-5 py-2">
+        {/* Input Box */}
+      <div className="sticky bottom-0 px-6 py-4 bg-[#262626]">
+        <div className="max-w-3xl mx-auto flex items-center bg-[#171717] border border-[#404040] shadow-2xl rounded-full px-5 py-2">
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) =>
-              e.key === "Enter" &&
-              !e.shiftKey &&
-              (e.preventDefault(), handleSend())
+              e.key === "Enter" && !e.shiftKey && (e.preventDefault(), handleSend())
             }
-            placeholder="Ask anything..."
+            placeholder="Ask anything"
+            className="flex-1 bg-transparent outline-none text-sm resize-none scrollbar-hide placeholder:text-white text-white"
             rows={1}
-            className="flex-1 bg-transparent outline-none resize-none text-sm text-white placeholder:text-gray-400"
           />
           <button
             onClick={handleSend}
             disabled={loading}
-            className="ml-3 p-2 rounded-full bg-white text-black hover:scale-110 transition disabled:opacity-50"
+            className="ml-3 p-2 rounded-full bg-white text-black cursor-pointer hover:scale-110 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <Send size={18} />
           </button>
         </div>
+
+        <footer className="flex justify-center text-xs mt-2">
+          <p>BotMe can make mistakes. Check important info.</p>
+        </footer>
       </div>
     </div>
   );

@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const prompt = messages
-      .map((m: Message) => `${m.sender}: ${m.text}`)
+      .map((m: any) => `${m.sender}: ${m.text}`)
       .join("\n");
 
     const result = await model.generateContentStream(prompt);

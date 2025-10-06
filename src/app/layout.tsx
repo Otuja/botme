@@ -29,11 +29,17 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* navbar for mobile and sidebar for desktop */}
-        <div className="flex relative flex-col md:flex-row">
+
+        <div className="flex flex-col md:flex-row h-screen overflow-hidden">
           <Navbar />
-          <div className=""><Sidebar /></div>
-          <main className="w-full ">{children}</main>
+
+          {/* Sidebar (independent scroll) */}
+          <div className="">
+            <Sidebar />
+          </div>
+
+          {/* Main Chat Area (independent scroll) */}
+          <div className="w-full overflow-y-auto">{children}</div>
         </div>
       </body>
     </html>
