@@ -38,11 +38,9 @@ It offers a clean, dark interface where users can chat with an AI assistant, man
 ## ⚙️ Installation & Setup
 
 ### 1. Clone the Repository
-
-git clone https://github.com/johnpraise/botme-chat.git
-cd botme-chat
-2. Install Dependencies
-
+- git clone https://github.com/johnpraise/botme-chat.git
+- cd botme-chat
+### 2. Install Dependencies
 npm install
 - # or
 - yarn install
@@ -56,7 +54,7 @@ npm install
 - npm run dev
 - # or
 - yarn dev
-Then visit http://localhost:3000.
+- Then visit http://localhost:3000.
 
 
 
